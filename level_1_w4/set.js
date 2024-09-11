@@ -1,3 +1,8 @@
+/*
+
+set and weak set
+
+*/
 const myData = [1, 3, 5, 8, 9, 7, 8, 5, 6, 2, 1, 5, 9, 4, 'A']
 
 let myUniqueData = new Set(myData);
@@ -14,3 +19,6 @@ console.log(myUniqueData.delete(8))
 console.log(myUniqueData.has(8))
 console.log(myUniqueData.has("amir"))
 console.log(myUniqueData.clear)
+
+ 
+let myWs = new WeakSet([{A: 1, B: 2}]);
