@@ -86,7 +86,7 @@ console.log(email.match(/\w@\w(.com|.net)/g));
 
 /*
     \b => matches at the beginning or at the end of a word
-    \B => matches at the beginning or at the end of a word
+    \B => matches not at the beginning or at the end of a word
 */
 let spammers = 'sayed 15spam 25spam 35spam Spam5 osama Ahmed amir Amir'
 
@@ -121,3 +121,54 @@ let urls = 'https://amiralsayed.tech http://www.amiralsayed.tech amiralsayed.tec
 
 console.log(urls.match(/https?/g)); // return http + s if exists
 console.log(urls.match(/(https?:\/\/)?(www.)?\w+.\w+/g)); // return http + s if exists
+
+
+// quantifiers
+/*
+    n{5}    => exactly 5
+    n{5,}   => 5 or more => at leaset 5 for example
+    n{5,10} => 5 to 10
+*/
+
+let serials = "s100s s3000s s50000s s950000s";
+
+console.log(serials.match(/s\d{3}s/ig)) // s[3 numbeers]s
+console.log(serials.match(/s\d{4,5}s/ig)) // s[4 numbeers or 5 numbers]s
+console.log(serials.match(/s\d{3,6}s/ig)) // s[from 3 to 6 digits]s
+console.log(serials.match(/s\d{4,}s/ig)) // s[at least 3 numbers]s
+
+
+/*
+    quantifiers
+    $ => end of string
+    ^ => start of string
+    ? => zero or one
+    ?= => positive lookahead
+    ?! => negative lookahead
+*/
+let myStringg = 'We Love Programming';
+
+let Names = '1amirZ 2AhmedZ 3Mohammed 3OsamaZ'
+
+console.log(/ing$/ig.test(myStringg))
+console.log(/aZ$/ig.test(Names))
+
+console.log(/^we/ig.test(myStringg))
+console.log(/^1/ig.test(Names))
+console.log(/^\d/ig.test(Names))
+
+console.log(Names.match(/\d\w{5}(?=z)/ig))
+console.log(Names.match(/\d\w{8}(?!z)/ig))
+
+
+/*
+replace, reaplaceAll
+*/
+
+let newText = "We Love programming And @ Because @ Is Amazing"
+
+console.log(newText.replace("@", "JavaScript"))
+console.log(newText.replaceAll("@", "JavaScript"))
+console.log(newText.replaceAll(/@/ig, "JavaScript"))
+
+

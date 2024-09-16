@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Form Validation</title>
+</head>
+
+<body>
+    <form action="" id="register" method="get">
+        <input type="text" name="the-phone" id="phone" maxlength="15">
+        <input type="submit" value="Register">
+    </form>
+
+    <script>
+        document.getElementById("register").onsubmit = function () {
+            let phone = document.getElementById("phone").value;
+            let phoneRe = /^\(\d{4}\)\s\d{3}-\d{4}/; // ex: (1234) 567-8910
+            let validationResult = phoneRe.test(phone);
+            console.log(validationResult);
+            if (validationResult === false) {
+                return false
+            }
+
+            return true;
+        }
+    </script>
+</body>
+
+</html>
