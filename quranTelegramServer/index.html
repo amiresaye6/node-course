@@ -1,0 +1,101 @@
+<!-- index.html (Frontend) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4A90E2;
+      margin-bottom: 20px;
+    }
+
+    #audio-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button:hover {
+      background-color: #357ABD;
+      transform: scale(1.05);
+    }
+
+    audio {
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 600px) {
+      button {
+        width: 100%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Audio Player</h1>
+  <div id="audio-buttons"></div>
+  <audio id="audio-player" controls style="display:none;"></audio>
+
+  <script>
+    // Fetch audio data from the backend API
+    async function fetchAudios() {
+      const response = await fetch('http://localhost:3000/audio');
+      return await response.json();
+    }
+
+    // Load audio buttons dynamically
+    async function loadAudios() {
+      const audios = await fetchAudios();
+      const container = document.getElementById('audio-buttons');
+      container.innerHTML = ''; // Clear existing buttons
+
+      audios.forEach(audio => {
+        const button = document.createElement('button');
+        button.textContent = audio.title || 'Play Audio';
+        button.onclick = () => playAudio(audio.url);
+        container.appendChild(button);
+      });
+    }
+
+    // Play the selected audio file
+    function playAudio(url) {
+      const audioPlayer = document.getElementById('audio-player');
+      audioPlayer.src = url;
+      audioPlayer.style.display = 'block';
+      audioPlayer.play();
+    }
+
+    // Load audios when the page is ready
+    window.onload = loadAudios;
+  </script>
+</body>
+</html>
