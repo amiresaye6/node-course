@@ -1,0 +1,3 @@
+
++++++++chunk+++++++++
+data written from  index.jsappended text from index.js
