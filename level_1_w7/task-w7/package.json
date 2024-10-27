@@ -1,0 +1,16 @@
+{
+  "name": "task-w7",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node calculator.js",
+    "dev": "nodemon calculator.js"
+  },
+  "keywords": [],
+  "author": "Amir Alsayed",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
