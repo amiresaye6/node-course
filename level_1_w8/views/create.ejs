@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Blog Snippet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff8c00;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: green;
+            font-size: 1.1rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Adel Shakal's Blog</div>
+        <%- include('./partials/navBar.ejs') %>
+    </nav>
+
+    <div class="container">
+        <h1>Create Blog Snippet</h1>
+
+        <form id="snippetForm" action="/blogs" method="post">
+            <!-- Title Field -->
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Enter snippet title" required>
+            <!-- Author Field -->
+            <label for="author">Author</label>
+            <input type="text" id="author" name="author" placeholder="Enter Author" required>
+
+            <!-- Content Field -->
+            <label for="content">Content</label>
+            <textarea id="content" name="content" placeholder="Enter full content" required></textarea>
+
+            <!-- Submit Button -->
+            <button type="submit">Create Snippet</button>
+        </form>
+
+        <p class="message" id="successMessage">Snippet created successfully!</p>
+    </div>
+
+    <script>
+        const form = document.getElementById('snippetForm');
+        const successMessage = document.getElementById('successMessage');
+    
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+    
+            // Get form values
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const content = document.getElementById('content').value;
+    
+            try {
+                // Submit data to backend via AJAX (adjust URL if needed)
+                const response = await fetch('/blogs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, author, content })
+                });
+    
+                if (response.ok) {
+                    form.reset();
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert('Failed to create snippet.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred.');
+            }
+        });
+    </script>
+    
+
+</body>
+
+</html>

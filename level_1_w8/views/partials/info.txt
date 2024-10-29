@@ -1,0 +1,20 @@
+what are partials
+
+they are parts of html code that we want to suer in multible view >> file with .ejs extension
+
+the views are serverside renderd, which means it is runs in the server then returns to the client
+the final version of the html page after modification if found
+
+
+partials are in the partials directory inside the views directory for ejs and views engin to work
+
+
+we use them like so in .ejs files
+
+
+<%- include('./relative/path/to/the/partial/file.ejs) %>
+
+nots about the <% js code here won't be seen in the html file, its only js code that will run %>
+
+
+<%=  any thing here willl appear in the htl file , wheather it is a variable or anything %>

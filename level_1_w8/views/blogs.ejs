@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %>></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #333;
+            width: 100%;
+            padding: 15px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff8c00;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .blog-card, .no-data-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .blog-content {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .blog-footer {
+            font-size: 14px;
+            color: #777;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .blog-footer .author {
+            display: flex;
+            align-items: center;
+        }
+
+        .blog-footer .author-icon {
+            margin-right: 8px;
+            color: #ff8c00;
+        }
+
+        .no-data-card {
+            font-size: 18px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Adel Shakal's Blog</div>
+        <%- include('./partials/navBar.ejs') %>
+    </nav>
+
+    <div class="main-content">
+        <h1>Welcome to the Blog Page</h1>
+        <p>Explore insightful posts from Adel Shakal on various topics.</p>
+
+        <% if(adelShakalQuotes.length > 0) { %>
+            <% adelShakalQuotes.forEach(adel => { %>
+                <div class="blog-card">
+                    <a style="text-decoration: none;" href='/blogs/blog/<%= adel._id %>'>
+                    <div class="blog-title">"<%= adel.title %>"</div>
+                </a>
+                    <div class="blog-content">
+                        <%= adel.content %>
+                    </div>
+                    <div class="blog-footer">
+                        <div class="author">
+                            <i class="fas fa-user author-icon"></i>
+                            <%= adel.author %>
+                        </div>
+                        <div class="date">Posted on: <%= new Date().toLocaleDateString()  %></div>
+                    </div>
+                </div>
+                <a data-id="<%= adel._id %>" id="delete">Delete</a>
+                <% }) %>
+        <% } else { %>
+            <div class="no-data-card">
+                <i class="fas fa-exclamation-circle" style="color: #ff8c00; font-size: 24px;"></i>
+                <p>No blog posts available at the moment. Check back later for more content.</p>
+            </div>
+        <% } %>
+
+        <script>
+
+            const BtnDelete = document.getElementById('delete');
+
+            BtnDelete.addEventListener('click', (e) => {
+                fetch(`/blogs/${BtnDelete.dataset.id}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.json())
+                .then(data => window.alert("delted successfully", data))
+            })
+        </script>
+    </div>
+
+</body>
+</html>
