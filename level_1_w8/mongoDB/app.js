@@ -22,10 +22,14 @@ connectToDb((err) => {
 // routes
 app.get("/books", (req, res) => {
     let books = [];
+    const pages = req.query.p || 0;
+    const booksPerPage = 4
 
     db.collection('books')
         .find()
         .sort({ author: 1 })
+        .skip(pages * booksPerPage) // will skip the next 4 books each time we update the p query
+        .limit(booksPerPage)
         .forEach(book => books.push(book))
         .then(() => {
             res.status(200).json(books)
