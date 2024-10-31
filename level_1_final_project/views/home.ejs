@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>URL Shortener</h1>
+
+    <!-- Form to Shorten URL -->
+    <div class="form-group">
+      <label for="longUrl">Enter the long URL:</label>
+      <input type="text" id="longUrl" placeholder="e.g., https://example.com/long-url">
+
+      <label for="alias">Enter a custom alias (optional):</label>
+      <input type="text" id="alias" placeholder="e.g., myalias123">
+
+      <button type="button" id="shorten">Shorten URL</button>
+    </div>
+
+    <!-- Table to Display Shortened URLs -->
+    <table>
+      <thead>
+        <tr>
+          <th>Long URL</th>
+          <th>Alias</th>
+          <th>Shortened URL</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Rows will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const shortenBtn = document.getElementById("shorten");
+    const tableBody = document.getElementById("tableBody");
+
+    window.onload = () => {
+      fetch('http://localhost:3000/all')
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(url => addRow(url.url, url.alias, url._id)); // Assuming data includes _id
+        });
+    }
+
+    function addRow(longUrl, alias, id) {
+      const newRow = tableBody.insertRow(0);
+
+      newRow.innerHTML = `
+        <td>${longUrl}</td>
+        <td>${alias}</td>
+        <td><a href="http://localhost:3000/${alias}" target="_blank">http://localhost:3000/${alias}</a></td>
+        <td>
+          <button class="edit-btn" onclick="editRow(this, '${id}')">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="delete-btn" onclick="deleteRow(this, '${id}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+    }
+
+    shortenBtn.addEventListener("click", e => {
+      const alias = document.getElementById("alias").value;
+      const longUrl = document.getElementById("longUrl").value;
+
+      fetch('http://localhost:3000/', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url: longUrl,
+          alias
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          addRow(longUrl, alias, data._id); // Assuming data returns the new id
+          console.log(data);
+        });
+    });
+
+    // Edit row function
+    function editRow(button, id) {
+      const row = button.closest("tr");
+      const longUrlCell = row.cells[0];
+      const aliasCell = row.cells[1];
+
+      // Set the content of the cells to input fields
+      longUrlCell.innerHTML = `<input type="text" value="${longUrlCell.textContent}">`;
+      aliasCell.innerHTML = `<input type="text" value="${aliasCell.textContent}">`;
+
+      // Change the edit button to a save button
+      button.innerHTML = `<i class="fas fa-save"></i>`;
+      button.onclick = () => saveRow(button, id);
+    }
+
+    // Save row function
+    function saveRow(button, id) {
+      const row = button.closest("tr");
+      const longUrlCell = row.cells[0].querySelector("input").value;
+      const aliasCell = row.cells[1].querySelector("input").value;
+
+      // Update the cell contents with the new values
+      row.cells[0].textContent = longUrlCell;
+      row.cells[1].textContent = aliasCell;
+
+      // Change the save button back to an edit button
+      button.innerHTML = `<i class="fas fa-edit"></i>`;
+      fetch(`http://localhost:3000/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url: longUrlCell,
+          alias: aliasCell
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+        });
+      button.onclick = () => editRow(button);
+    }
+
+    // Delete row function
+    function deleteRow(button, id) {
+      const row = button.closest("tr");
+
+      fetch(`http://localhost:3000/${id}`, {
+        method: "DELETE"
+      })
+        .then(res => {
+          if (res.ok) {
+            row.remove(); // Remove the row if the delete request was successful
+          } else {
+            console.error('Delete failed:', res.statusText);
+          }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+  </script>
+
+</body>
+
+</html>
