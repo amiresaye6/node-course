@@ -1,0 +1,248 @@
+show dbs >> show all the databases
+use dbName >> switchs to the dbnamew we chosen or create it if not exist once we add a collection to it
+show collections >> show all the collections in a databases
+
+db.collectionName.insertOne({...}) >> adds one document to the collectionName
+db.collectionName.insertMany([{...}, {...}, {...}]) >> adds more than one document to the collectionName
+
+
+////// we will user books as a collection name for clarity
+
+db.books.find() >> will return the first 20 documents in the books collection
+if we typed << it >> "iterate" after it, it will return the next 20 or less
+
+db.books.find({...}) >> will return the first 20 documents in the books collection that meats the filter inside
+
+ex: db.books.find({ author: "amir" })
+ex: db.books.find({ author: "amir", rating: 8})
+
+
+deciding which fields to get back
+
+ex: db.books.find({ author: "amir", rating: 8}, {title: 1, bages: 1}) >> will return the _id, title, author only for each record
+
+
+return without a filter but with specific fields
+ex: db.books.find({}, {title: 1, bages: 1, id: 0}) >> will return title, author only
+
+
+find one single document
+ex: db.books.findOne({_id: ObjectId('67221b97af28f8e041277e07')}) >> will return the first document that matchs the filter
+
+method chinning
+
+ex: db.books.find().count() >> will return the count of all documents in the collection
+ex: db.books.find().limit(5) >> will return 5 documents
+ex: db.books.find().sort({field_to_sort_by: 1}) >> will return the documents sorted in assending order
+ex: db.books.find().sort({field_to_sort_by: -1}) >> will return the documents sorted in descending order
+ex: db.books.find().sort({rating: -1}) >> will return the documents sorted in descending order
+
+
+adding operators  to deal with varing range of filters not just strict values like {rating: 9}
+
+db.books.find({rating: {$gt: 7.2}}) >> all books greater than but not equal than 7.2
+db.books.find({rating: {$lt: 7.2}}) >> all books less than but not equal than 7.2
+db.books.find({rating: {$gte: 7.2}}) >> all books greater than or equal 7.2
+db.books.find({rating: {$lte: 7.2}}) >> all books less than or equal 7.2
+
+compined filter
+db.books.find({title: "amir", rating: {$lte: 7.2}}) >> all books with title amir and rating <= 7.2
+
+<<< $or >>>
+ex: db.books.find({$or: [{rating: {$gte: 3}}, {author: "amir alsayed"}]}) >> return any docu with rating >= 3 or authro of "amir alsayed"
+
+<<< $in >>>
+ex: db.books.find({rating: {$in: [8, 9, 4]}}) >> return docs with rating of 8 or 9 or 4
+do the same but with $or
+ex: db.books.find({$or: [{rating: 8}, {rating: 9}, {rating: 4}]})
+
+<<< $nin >>>  means not in
+ex: db.books.find({rating: {$nin: [8, 9, 4]}}) >> return docs with rating not with the value of 8 or 9 or 4
+
+
+quering books based on the ganra which is an array of values
+ex: db.books.find({genres: "Fiction"})
+
+if we want it to get exactly the books with only the Fiction ganra
+ex: db.books.find({genres: ["Fiction"]})
+ex: db.books.find({genres: ["Fiction", "fiction"]})
+
+
+if we want it to get all boox that have fiction and fantacy in the ganras but not only them
+ex: db.books.find({genres: {$all: ["Fiction", "Fantacy"]}})
+
+
+quering nested documents
+for example we want all posts with comments by someone 
+{
+  _id: ObjectId('672226136e15fcc78d258bcb'),
+  title: "A Beginner's Guide to API Design",
+  content: 'API design is crucial for developer experience. Here’s a beginner-friendly guide to building effective APIs...',
+  author: 'Leo Perez',
+  datePosted: '2023-08-25',
+  likes: 37,
+  comments: [
+    {
+      author: 'Sarah Kim',
+      text: 'APIs seemed complex before reading this. Thanks!',
+      datePosted: '2023-08-26',
+      likes: 3
+    }
+  ]
+}
+
+ex: db.posts.find({"comments.author": "someOne" })
+
+
+<<< deleting documents >>>
+ex: db.books.deleteOne({_id: ObjectId('67221a49af28f8e041277df3') })
+result: 
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+
+
+delete more than one at once
+ex: db.books.deleteMany({author: "Victor Hugo"})
+
+result:
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+
+ex: db.books.deleteMany({}) >> will delete all of the docs
+{
+  acknowledged: true,
+  deletedCount: 20
+}
+
+
+
+<<< updating documents >>>
+ex: db.books.updateOne({filter object}, {$set: {key: newValue}})
+ex: db.books.updateOne({_id: ObjectId('67221a49af28f8e041277df3')}, {$set: {pages: 99999999999999999}})
+result:
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+ex: db.books.updateOne({_id: ObjectId('67221a49af28f8e041277df3')}, {$set: {pages: 10000000000000, rating: 9.9999}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+ex: db.books.updateMany({rating: {$lg: 3}}, {$set: {pages: 10000000000000, rating: 9.9999}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 22,
+  modifiedCount: 21,
+  upsertedCount: 0
+}
+
+
+<<<< $inc operator >>>>
+ex: db.books.updateMany({}, {$inc: {pages: 5, rating: 0.59}}) >> increse the pages of each book by 5 and the rating by 0.59
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 22,
+  modifiedCount: 22,
+  upsertedCount: 0
+}
+
+
+ex: db.books.updateMany({}, {$inc: {pages: -5, rating: -1.59}}) >> decrease the pages of each book by 5 and the rating by 0.59
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 22,
+  modifiedCount: 22,
+  upsertedCount: 0
+}
+
+
+<<<<$push & $pull>>>>
+db.books.findOne({_id: ObjectId('67221b97af28f8e041277e07')})
+{
+  _id: ObjectId('67221b97af28f8e041277e07'),
+  title: 'Wuthering Heights',
+  author: 'Emily Brontë',
+  pages: 421,
+  genres: [
+    'Fiction',
+    'Classic',
+    'Romance'
+  ],
+  rating: 4.44
+}
+
+db.books.updateOne({_id: ObjectId('67221b97af28f8e041277e07')}, {$push: {genres: "Fiction"}})
+result:
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+db.books.findOne({_id: ObjectId('67221b97af28f8e041277e07')})
+{
+  _id: ObjectId('67221b97af28f8e041277e07'),
+  title: 'Wuthering Heights',
+  author: 'Emily Brontë',
+  pages: 421,
+  genres: [
+    'Fiction',
+    'Classic',
+    'Romance',
+    'Fiction'
+  ],
+  rating: 4.44
+}
+
+db.books.updateOne({_id: ObjectId('67221b97af28f8e041277e07')}, {$push: {genres: "Romance"}})
+db.books.findOne({_id: ObjectId('67221b97af28f8e041277e07')}){
+  _id: ObjectId('67221b97af28f8e041277e07'),
+  title: 'Wuthering Heights',
+  author: 'Emily Brontë',
+  pages: 421,
+  genres: [
+    'Fiction',
+    'Classic',
+    'Fiction'
+  ],
+  rating: 4.44
+}
+
+
+what about push several items to the array
+<<<<$each>>>>
+
+db.books.updateOne({_id: ObjectId('67221b97af28f8e041277e07')}, {$push: {genres: {$each: ["a", "b", "c"]}}})
+db.books.findOne({_id: ObjectId('67221b97af28f8e041277e07')})
+{
+  _id: ObjectId('67221b97af28f8e041277e07'),
+  title: 'Wuthering Heights',
+  author: 'Emily Brontë',
+  pages: 421,
+  genres: [
+    'Fiction',
+    'Classic',
+    'Fiction',
+    'a',
+    'b',
+    'c'
+  ],
+  rating: 4.44
+}
