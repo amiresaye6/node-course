@@ -489,6 +489,7 @@ _By the end of this level, the learner should learn_
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfACZEJqxmpChEQZv-mF7Bbmkt67iRgqudtSDGfmlzyjZIjJQ/viewform">Level 2: Week 2 Quiz</a>
             </td>
         </tr>
+        <div style="padding: 10px; background-color: #FFEB3B; border-radius: 5px; width: fit-content; margin: 10px 0; font-weight: bold; color: #333;">📍 Current Position: Chapter 5 - Building Components</div>
         <tr>
             <th>Week 3</th>
             <td>
