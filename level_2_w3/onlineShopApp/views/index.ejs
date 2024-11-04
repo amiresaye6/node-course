@@ -1,0 +1,48 @@
+<%- include('parts/header') %>
+<%- include('parts/navpar.ejs') %>
+<div class="container my-5"> <!-- Added my-5 for vertical spacing -->
+    <div class="row">
+        <!-- Filter Form -->
+        <form action="/" method="get" class="row g-3 align-items-center mb-4">
+            <div class="col-md-4">
+                <select class="form-select" name="category">
+                    <option value="all">All</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="both">Both</option>
+                </select>
+            </div>
+            <div class="col-md-auto">
+                <input type="submit" value="Filter" class="btn btn-primary">
+            </div>
+        </form>
+
+        <!-- Products Grid -->
+        <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card shadow-sm h-100"> <!-- Added shadow and full height for cards -->
+                        <img src="<%= product.img %>" class="card-img-top" alt="<%= product.name %>">
+                        <div class="card-body d-flex flex-column"> <!-- Flex to align elements better -->
+                            <h5 class="card-title">
+                                <a href="/products/<%= product._id %>" class="text-decoration-none text-dark">
+                                    <%= product.name %>
+                                </a>
+                            </h5>
+                            <p class="card-text">Price: <%= product.price %>$</p>
+                            <form action="/cart" method="post" class="mt-auto"> <!-- mt-auto to push form to bottom -->
+                                <input type="number" name="ammount" class="form-control mb-2" placeholder="Quantity" min="1">
+                                <input type="submit" value="Add to Cart" class="btn btn-primary w-100"> <!-- Full-width button -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12 text-center">
+                <p class="text-muted">No products available.</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+<%- include('parts/footer') %>
