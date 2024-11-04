@@ -3,7 +3,8 @@ require("dotenv").config()
 const morgan = require("morgan")
 
 const homeRouter = require('./routes/home.routes')
-const productsRouter = require('./routes/products.routes')
+const productsRoutes = require('./routes/products.routes')
+const authRoutes = require("./routes/auth.routes")
 
 
 // init and middlewares
@@ -19,7 +20,8 @@ if(process.env.Environment === 'dev') {
 }
 
 app.use('/', homeRouter)
-app.use('/products', productsRouter)
+app.use('/products', productsRoutes)
+app.use('/auth', authRoutes)
 
 
 const port = process.env.Port || 5000
