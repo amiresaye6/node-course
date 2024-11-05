@@ -7,6 +7,7 @@ const SessionStore = require("connect-mongodb-session")(session);
 const homeRouter = require('./routes/home.routes');
 const productsRoutes = require('./routes/products.routes');
 const authRoutes = require("./routes/auth.routes");
+const flash = require("connect-flash")
 
 // Initialize app and middlewares
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", 'ejs');
 app.use(express.static('assets'));
 app.use(express.static('images'));
+app.use(flash()) // adds flash function to the request object
 
 // Set up session store
 const store = new SessionStore({

@@ -1,11 +1,13 @@
 const userModule = require('../models/users.model');
 
 const loginPage = (req, res) => {
-    res.render("login");
+    const authErr = req.flash('authErr')[0];
+    res.render("login", { authErr });
 };
 
 const signupPage = (req, res) => {
-    res.render("signup");
+    const authErr = req.flash('authErr')[0];
+    res.render("signup", {authErr});
 };
 
 const login = async (req, res) => {
@@ -15,7 +17,8 @@ const login = async (req, res) => {
         req.session.userId = user._id;
         res.redirect('/');
     } catch (error) {
-        res.status(400).send("Invalid email or password");
+        req.flash('authErr', error.message)
+        res.redirect('/auth/login');
     }
 };
 
@@ -25,8 +28,9 @@ const signup = async (req, res) => {
         await userModule.signup(username, email, password);
         res.status(200).redirect('/auth/login');
     } catch (error) {
-        console.log(err);
-        res.status(400).send("Signup failed: " + error.message);
+        console.log(error);
+        req.flash('authErr', error.message)
+        res.redirect('/auth/signup');
     }
 };
 

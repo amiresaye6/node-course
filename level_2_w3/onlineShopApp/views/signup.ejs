@@ -25,6 +25,12 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                 </form>
+                <% if(authErr) { %>
+                    <br>
+                    <p class="alert alert-danger">
+                        <%= authErr %>
+                    </p>
+                <%}%>
                 <p class="text-center mt-3">Already have an account? <a href="/auth/login">Login</a></p>
             </div>
         </div>
