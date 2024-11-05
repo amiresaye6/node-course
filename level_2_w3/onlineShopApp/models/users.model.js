@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const DB_URL = process.env.DB_URL;
 
@@ -21,11 +22,18 @@ const login = (email, password) => {
     return new Promise((resolve, reject) => {
         mongoose.connect(DB_URL)
             .then(() => {
-                return User.findOne({ email, password });
+                return User.findOne({ email });
             })
             .then(user => {
-                mongoose.disconnect();
-                resolve(user);
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                return bcrypt.compare(password, user.password)
+                    .then(match => {
+                        if (!match) throw new Error('Incorrect password');
+                        mongoose.disconnect();
+                        resolve(user);
+                    });
             })
             .catch(err => {
                 mongoose.disconnect();
@@ -37,15 +45,14 @@ const login = (email, password) => {
 const signup = (username, email, password) => {
     return new Promise((resolve, reject) => {
         mongoose.connect(DB_URL)
-            .then(() => {
-                return User.findOne({ email });
-            })
+            .then(() => User.findOne({ email }))
             .then(user => {
                 if (user) {
                     throw new Error('User already has an account');
                 }
-                return User.create({ username, email, password });
+                return bcrypt.hash(password, 10);
             })
+            .then(hashedPassword => User.create({ username, email, password: hashedPassword }))
             .then(newUser => {
                 mongoose.disconnect();
                 resolve(newUser);
