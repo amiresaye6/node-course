@@ -1,11 +1,9 @@
+// Import necessary modules
 const express = require("express");
 require("dotenv").config();
 const morgan = require("morgan");
-
-// Session management and auth condition storing
 const session = require("express-session");
 const SessionStore = require("connect-mongodb-session")(session);
-
 const homeRouter = require('./routes/home.routes');
 const productsRoutes = require('./routes/products.routes');
 const authRoutes = require("./routes/auth.routes");
@@ -18,29 +16,32 @@ app.set("view engine", 'ejs');
 app.use(express.static('assets'));
 app.use(express.static('images'));
 
+// Set up session store
 const store = new SessionStore({
     uri: process.env.DB_URL,
     collection: "sessions"
 });
 
 // Error handling for session store
-store.on('error', function(error) {
+store.on('error', (error) => {
     console.error("Session store error:", error);
 });
 
+// Session configuration
 app.use(session({
-    secret: process.env.SecretKey,
+    secret: process.env.SECRET_KEY,
     saveUninitialized: false,
-    resave: false, // Prevents unnecessary session saving
+    resave: false,
     store,
     cookie: {
-        httpOnly: true,   // Helps mitigate XSS attacks
-        secure: process.env.Environment === 'production', // Use cookies only over HTTPS in production
-        sameSite: 'lax'   // Helps prevent CSRF attacks
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
     }
 }));
 
-if (process.env.Environment === 'dev') {
+// Logging setup
+if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
@@ -49,7 +50,14 @@ app.use('/', homeRouter);
 app.use('/products', productsRoutes);
 app.use('/auth', authRoutes);
 
-const port = process.env.Port || 5000;
+// Custom error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
+// Start server
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });

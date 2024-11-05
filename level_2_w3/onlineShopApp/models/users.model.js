@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const DB_URL = process.env.DB_URL;
-
 const userSchema = mongoose.Schema({
     username: String,
     email: {
@@ -18,50 +16,38 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-        mongoose.connect(DB_URL)
-            .then(() => {
-                return User.findOne({ email });
-            })
-            .then(user => {
-                if (!user) {
-                    throw new Error('User not found');
-                }
-                return bcrypt.compare(password, user.password)
-                    .then(match => {
-                        if (!match) throw new Error('Incorrect password');
-                        mongoose.disconnect();
-                        resolve(user);
-                    });
-            })
-            .catch(err => {
-                mongoose.disconnect();
-                reject(err);
-            });
-    });
+// Establish a persistent connection on startup
+mongoose.connect(process.env.DB_URL)
+    .then(() => console.log("connected correctly to mongoDB"))
+    .catch(err => console.error("Database connection error:", err));
+
+// Login function
+const login = async (email, password) => {
+    try {
+        const user = await User.findOne({ email });
+        if (!user) throw new Error("User not found");
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) throw new Error("Incorrect password");
+
+        return user;
+    } catch (err) {
+        throw new Error(err.message);
+    }
 };
 
-const signup = (username, email, password) => {
-    return new Promise((resolve, reject) => {
-        mongoose.connect(DB_URL)
-            .then(() => User.findOne({ email }))
-            .then(user => {
-                if (user) {
-                    throw new Error('User already has an account');
-                }
-                return bcrypt.hash(password, 10);
-            })
-            .then(hashedPassword => User.create({ username, email, password: hashedPassword }))
-            .then(newUser => {
-                mongoose.disconnect();
-                resolve(newUser);
-            })
-            .catch(err => {
-                mongoose.disconnect();
-                reject(err);
-            });
-    });
+// Signup function
+const signup = async (username, email, password) => {
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) throw new Error("User already has an account");
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({ username, email, password: hashedPassword });
+        return newUser;
+    } catch (err) {
+        throw new Error(err.message);
+    }
 };
 
 module.exports = {
