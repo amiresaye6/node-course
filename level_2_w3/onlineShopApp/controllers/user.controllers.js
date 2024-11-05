@@ -1,4 +1,5 @@
 const userModule = require('../models/users.model');
+const validator = require('express-validator').validationResult
 
 const loginPage = (req, res) => {
     const authErr = req.flash('authErr')[0];
@@ -24,6 +25,8 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
     try {
+        return console.log(validator(req));
+        
         const { username, email, password } = req.body;
         await userModule.signup(username, email, password);
         res.status(200).redirect('/auth/login');
