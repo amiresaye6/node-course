@@ -7,30 +7,86 @@
             <div class="card shadow-sm p-4">
                 <h3 class="card-title text-center mb-4">Signup</h3>
                 <form action="/auth/signup" method="POST">
+                    <!-- Full Name Field -->
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" name="username" placeholder="Enter your name" required>
+                        <input type="text" class="form-control" id="name" name="username" placeholder="Enter your name">
+                        <!-- Display validation error for 'username' -->
+                        <% if (validationErrors) { %>
+                            <% validationErrors.forEach(err => { %>
+                                <% console.log(err) %>
+                                <% if (err.path === 'username') { %>
+                                    <br>
+                                    <p class="alert alert-warning" style="background-color: #fff3cd; border-color: #ffeeba;">
+                                        <%= err.msg %>
+                                    </p>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
                     </div>
+
+                    <!-- Email Field -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        <input  class="form-control" id="email" name="email" placeholder="Enter your email">
+                        <!-- Display validation error for 'email' -->
+                        <% if (validationErrors) { %>
+                            <% validationErrors.forEach(err => { %>
+                                <% if (err.path === 'email') { %>
+                                    <br>
+                                    <p class="alert alert-warning" style="background-color: #fff3cd; border-color: #ffeeba;">
+                                        <%= err.msg %>
+                                    </p>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
                     </div>
+
+                    <!-- Password Field -->
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a password">
+                        <!-- Display validation error for 'password' -->
+                        <% if (validationErrors) { %>
+                            <% validationErrors.forEach(err => { %>
+                                <% if (err.path === 'password') { %>
+                                    <br>
+                                    <p class="alert alert-warning" style="background-color: #fff3cd; border-color: #ffeeba;">
+                                        <%= err.msg %>
+                                    </p>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
                     </div>
+
+                    <!-- Confirm Password Field -->
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+                        <!-- Display validation error for 'confirmPassword' -->
+                        <% if (validationErrors) { %>
+                            <% validationErrors.forEach(err => { %>
+                                <% if (err.path === 'confirmPassword') { %>
+                                    <br>
+                                    <p class="alert alert-warning" style="background-color: #fff3cd; border-color: #ffeeba;">
+                                        <%= err.msg %>
+                                    </p>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
                     </div>
+
                     <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                 </form>
-                <% if(authErr) { %>
+
+                <!-- Display authentication error with distinct style -->
+                <% if (authErr) { %>
                     <br>
-                    <p class="alert alert-danger">
+                    <p class="alert alert-danger" style="background-color: #f8d7da; border-color: #f5c6cb;">
                         <%= authErr %>
                     </p>
-                <%}%>
+                <% } %>
+
                 <p class="text-center mt-3">Already have an account? <a href="/auth/login">Login</a></p>
             </div>
         </div>

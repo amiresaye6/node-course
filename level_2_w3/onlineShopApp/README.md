@@ -3,6 +3,9 @@
 > **Project Description**: Online Shop App: KMR Script [19:30]
 
 ---
+## to-do
+
+solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again.
 
 ## Technologies Used
 

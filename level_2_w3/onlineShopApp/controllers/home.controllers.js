@@ -8,7 +8,7 @@ const getHome = (req, res) => {
     if (category && validCategories.includes(category)) {
         productsModel.getProductsByCategory(category).then(products => res.render("index", { products }));
     } else {
-        productsModel.getAllProducts().then(products => res.render("index", { products }));
+        productsModel.getAllProducts().then(products => res.render("index", { products, isUser: req.session.userId }));
     }
 }
 

@@ -7,7 +7,8 @@ const SessionStore = require("connect-mongodb-session")(session);
 const homeRouter = require('./routes/home.routes');
 const productsRoutes = require('./routes/products.routes');
 const authRoutes = require("./routes/auth.routes");
-const flash = require("connect-flash")
+const flash = require("connect-flash");
+const mongoose = require("mongoose")
 
 // Initialize app and middlewares
 const app = express();
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", 'ejs');
 app.use(express.static('assets'));
 app.use(express.static('images'));
-app.use(flash()) // adds flash function to the request object
+app.use(flash()); // adds flash function to the request object
 
 // Set up session store
 const store = new SessionStore({
@@ -55,11 +56,17 @@ app.use('/auth', authRoutes);
 // Custom error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+    res.status(500).send('Something went wrong! >> from app.js');
 });
 
-// Start server
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-});
+mongoose.connect(process.env.DB_URL)
+    .then(() => {
+        console.log("Connected to MongoDB");
+
+        // Start the server only after MongoDB connection is established
+        const port = process.env.PORT || 5000;
+        app.listen(port, () => {
+            console.log(`Listening on port ${port}`);
+        });
+    })
+    .catch(err => console.error("Database connection error:", err));

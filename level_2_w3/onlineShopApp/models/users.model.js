@@ -16,14 +16,13 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Establish a persistent connection on startup
-mongoose.connect(process.env.DB_URL)
-    .then(() => console.log("connected correctly to mongoDB"))
-    .catch(err => console.error("Database connection error:", err));
-
 // Login function
 const login = async (email, password) => {
     try {
+        // Ensure the database is connected before any operation
+        if (mongoose.connection.readyState !== 1) {
+            throw new Error("Database not connected");
+        }
         const user = await User.findOne({ email });
         if (!user) throw new Error("User not found");
 
@@ -35,6 +34,7 @@ const login = async (email, password) => {
         throw new Error(err.message);
     }
 };
+
 
 // Signup function
 const signup = async (username, email, password) => {

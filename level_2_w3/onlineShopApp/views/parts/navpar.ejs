@@ -11,18 +11,23 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/cart">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/orders">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/auth/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/auth/signup">Signup</a>
-                </li>
+                <% if(isUser) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/signup">Signup</a>
+                    </li>
+                <% } %>
+
+                <!-- this will be visable only to admins  -->
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/add">Add Products</a>
                 </li>
@@ -30,11 +35,12 @@
                     <a class="nav-link" href="/admin/orders">Manage Orders</a>
                 </li>
             </ul>
-
-            <!-- Logout Button on the Right Side -->
-            <form action="/auth/logout" method="post" class="d-flex">
-                <button type="submit" class="btn btn-outline-light ms-2">Logout</button>
-            </form>
+            <% if(isUser) { %>
+                <!-- Logout Button on the Right Side -->
+                <form action="/auth/logout" method="post" class="d-flex">
+                    <button type="submit" class="btn btn-outline-light ms-2">Logout</button>
+                </form>
+            <% } %>
         </div>
     </div>
 </nav>
