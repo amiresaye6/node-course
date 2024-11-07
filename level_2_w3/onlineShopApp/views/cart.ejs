@@ -1,0 +1,63 @@
+<%- include('parts/header') %>
+<%- include('parts/navpar.ejs') %>
+
+<div class="container my-5">
+    <h2 class="mb-4">Your Cart</h2>
+    
+    <% if (cartItems.length > 0) { %>
+        <div class="row">
+            <!-- Cart Items List -->
+            <div class="col-lg-8">
+                <% if(validationErrors.length > 0){ %>
+                    <div class="alert alert-danger">
+                        <%= validationErrors[0].msg %>
+                    </div>
+                <% } %>
+                <% cartItems.forEach(item => { %>
+                    <div class="card shadow-sm mb-4">
+                        <div class="row g-0">
+                            <!-- Product Image -->
+                            <div class="col-md-4">
+                                <img src="/<%= item.img %>" alt="<%= item.name %>" class="card-img-top img-fluid rounded-start">
+                            </div>
+                            <!-- Product Details and Controls -->
+                            <div class="col-md-8">
+                                <div class="card-body d-flex flex-column justify-content-between h-100">
+                                    <h5 class="card-title">
+                                        <a href="/products/<%= item.productId %>" class="text-decoration-none text-dark"><%= item.name %></a>
+                                    </h5>
+                                    <p class="card-text text-success">Price per item: $<%= item.price %></p>
+                                    <form method="post" class="d-flex align-items-center">
+                                        <label for="quantity-<%= item.productId %>" class="form-label me-2">Quantity:</label>
+                                        <input type="number" name="amount" id="quantity-<%= item.productId %>" class="form-control me-2" value="<%= item.amount %>" min="1" required style="width: 80px;">
+                                        <input type="hidden" name="productId" value="<%= item.productId %>">
+                                        <button type="submit" class="btn btn-secondary btn-sm me-2" formaction="/cart/update">Update</button>
+                                        <button type="submit" class="btn btn-secondary btn-danger btn-sm me-2" formaction="/cart/delete">Remove</button>
+                                    </form>
+                                    <p class="card-text mt-2"><strong>Total: $<%= (item.price * item.amount).toFixed(2) %></strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm p-4">
+                    <h4 class="mb-3">Cart Summary</h4>
+                    <p class="card-text">Total Items: <%= cartItems.reduce((total, item) => total + item.amount, 0) %></p>
+                    <p class="card-text"><strong>Total Price: $<%= cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2) %></strong></p>
+                    <a href="/checkout" class="btn btn-primary w-100 mt-3">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="text-center text-muted mt-5">
+            <p>Your cart is currently empty.</p>
+            <a href="/" class="btn btn-primary">Shop Now</a>
+        </div>
+    <% } %>
+</div>
+
+<%- include('parts/footer') %>

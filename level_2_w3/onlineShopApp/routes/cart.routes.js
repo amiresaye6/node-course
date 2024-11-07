@@ -4,11 +4,16 @@ const authGuard = require("../middlewares/auth.guard");
 const check = require("express-validator").check
 
 
+router.get('/', authGuard.isAuth, cartController.getAllCartProducts);
+
 router.post('/',
     authGuard.isAuth,
     check("amount").isInt({min: 1}).withMessage("Amount must be a NUMBER greater than 0"),
     cartController.addNewProcuctToCart);
 
-router.get('/', authGuard.isAuth, cartController.getAllCartProducts);
+router.post('/update', authGuard.isAuth,
+    check("amount").isInt({min: 1}).withMessage("Amount must be a NUMBER greater than 0"),
+    cartController.updateCart);
+router.post('/delete', authGuard.isAuth, cartController.deleteCartItem);
 
 module.exports = router

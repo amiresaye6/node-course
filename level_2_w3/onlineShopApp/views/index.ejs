@@ -46,12 +46,12 @@
                                     id="quantity-<%= product._id %>" 
                                     class="form-control mb-2" 
                                     placeholder="Enter quantity" 
-                                    min="1" 
-                                    required
+                                    min="1"
                                     title="Specify the quantity to add to cart">
                                 <input type="hidden" name="productId" value="<%= product._id %>">
                                 <input type="hidden" name="name" value="<%= product.name %>">
                                 <input type="hidden" name="price" value="<%= product.price %>">
+                                <input type="hidden" name="img" value="<%= product.img %>">
                                 <input type="hidden" name="redirectTo" value="/">
                                 <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
                             </form>
