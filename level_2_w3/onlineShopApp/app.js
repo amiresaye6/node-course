@@ -7,6 +7,7 @@ const SessionStore = require("connect-mongodb-session")(session);
 const homeRouter = require('./routes/home.routes');
 const productsRoutes = require('./routes/products.routes');
 const authRoutes = require("./routes/auth.routes");
+const cartRoutes = require("./routes/cart.routes");
 const flash = require("connect-flash");
 const mongoose = require("mongoose")
 
@@ -52,6 +53,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/', homeRouter);
 app.use('/products', productsRoutes);
 app.use('/auth', authRoutes);
+app.use('/cart', cartRoutes);
 
 // Custom error handling middleware
 app.use((err, req, res, next) => {
