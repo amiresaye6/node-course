@@ -5,7 +5,7 @@
 ---
 ## to-do
 
-solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again.
+solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again. [done]
 
 ## Technologies Used
 

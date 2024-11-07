@@ -23,12 +23,15 @@ const login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
+        // console.log("first+++++++++++++++++", email, password)
         
         // Await the login method to ensure it completes before moving on
         const user = await userModule.login(email, password);
-
+        // console.log("second+++++++++++++++++", user)
+        
         // If user is valid, set session and redirect
         req.session.userId = user._id;
+        // console.log("third+++++++++++++++++", req.session.userId)
         res.redirect('/');
     } catch (error) {
         // Log detailed error and provide a more specific error message in flash

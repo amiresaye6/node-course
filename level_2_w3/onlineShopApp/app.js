@@ -59,14 +59,17 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong! >> from app.js');
 });
 
-mongoose.connect(process.env.DB_URL)
-    .then(() => {
-        console.log("Connected to MongoDB");
+mongoose.connect(process.env.DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log("Connected to MongoDB");
 
-        // Start the server only after MongoDB connection is established
-        const port = process.env.PORT || 5000;
-        app.listen(port, () => {
-            console.log(`Listening on port ${port}`);
-        });
-    })
-    .catch(err => console.error("Database connection error:", err));
+    // Start the server only after MongoDB connection is established
+    const port = process.env.PORT || 5000;
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+    });
+})
+.catch(err => console.error("Database connection error:", err));

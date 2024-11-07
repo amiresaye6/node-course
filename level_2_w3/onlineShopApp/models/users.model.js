@@ -20,9 +20,7 @@ const User = mongoose.model('User', userSchema);
 const login = async (email, password) => {
     try {
         // Ensure the database is connected before any operation
-        if (mongoose.connection.readyState !== 1) {
-            throw new Error("Database not connected");
-        }
+        await connectToDatabase();
         const user = await User.findOne({ email });
         if (!user) throw new Error("User not found");
 
@@ -35,10 +33,11 @@ const login = async (email, password) => {
     }
 };
 
-
 // Signup function
 const signup = async (username, email, password) => {
     try {
+        // Ensure the database is connected before any operation
+        await connectToDatabase();
         const existingUser = await User.findOne({ email });
         if (existingUser) throw new Error("User already has an account");
 
@@ -47,6 +46,21 @@ const signup = async (username, email, password) => {
         return newUser;
     } catch (err) {
         throw new Error(err.message);
+    }
+};
+
+// Function to connect to the database
+const connectToDatabase = async () => {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            await mongoose.connect(process.env.DB_URL, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            });
+            console.log("Connected to MongoDB");
+        }
+    } catch (err) {
+        throw new Error("Error connecting to the database: " + err.message);
     }
 };
 
