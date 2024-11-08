@@ -29,7 +29,7 @@
                                     <p class="card-text text-success">Price per item: $<%= item.price %></p>
                                     <form method="post" class="d-flex align-items-center">
                                         <label for="quantity-<%= item.productId %>" class="form-label me-2">Quantity:</label>
-                                        <input type="number" name="amount" id="quantity-<%= item.productId %>" class="form-control me-2" value="<%= item.amount %>" min="1" required style="width: 80px;">
+                                        <input type="number" name="amount" id="quantity-<%= item.productId %>" class="form-control me-2" value="<%= item.amount %>" min="1" style="width: 80px;">
                                         <input type="hidden" name="productId" value="<%= item.productId %>">
                                         <button type="submit" class="btn btn-secondary btn-sm me-2" formaction="/cart/update">Update</button>
                                         <button type="submit" class="btn btn-secondary btn-danger btn-sm me-2" formaction="/cart/delete">Remove</button>
@@ -48,7 +48,14 @@
                     <h4 class="mb-3">Cart Summary</h4>
                     <p class="card-text">Total Items: <%= cartItems.reduce((total, item) => total + item.amount, 0) %></p>
                     <p class="card-text"><strong>Total Price: $<%= cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2) %></strong></p>
+
+                    <!-- Proceed to Checkout Button -->
                     <a href="/checkout" class="btn btn-primary w-100 mt-3">Proceed to Checkout</a>
+
+                    <!-- Clear Cart Button -->
+                    <form method="post" action="/cart/clear-cart" class="mt-3">
+                        <button type="submit" class="btn btn-danger w-100">Clear Cart</button>
+                    </form>
                 </div>
             </div>
         </div>

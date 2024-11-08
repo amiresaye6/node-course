@@ -15,5 +15,6 @@ router.post('/update', authGuard.isAuth,
     check("amount").isInt({min: 1}).withMessage("Amount must be a NUMBER greater than 0"),
     cartController.updateCart);
 router.post('/delete', authGuard.isAuth, cartController.deleteCartItem);
+router.post('/clear-cart', authGuard.isAuth, cartController.clearAllCartItems);
 
 module.exports = router

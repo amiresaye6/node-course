@@ -38,24 +38,35 @@ const updateCart = async (req, res) => {
         const productUpdates = req.body;
         const result = await cartModule.updateCartProduct(productUpdates)
         console.log(result);
-        
+
         return res.redirect('/cart')
     } catch (err) {
         console.error("Error deleting product from cart:", err);
         return res.status(500).send("Internal server error");
     }
 }
+
 const deleteCartItem = async (req, res) => {
     try {
         const productId = req.body.productId
         console.log(productId);
-        
+
         const result = await cartModule.deleteCartProduct(productId)
         console.log(result);
-        
+
         return res.redirect('/cart')
     } catch (err) {
         console.error("Error deleting product from cart:", err);
+        return res.status(500).send("Internal server error");
+    }
+}
+
+const clearAllCartItems = async (req, res) => {
+    try {
+        await cartModule.deleteAllCartProducts(req.session.userId)
+        return res.redirect('/cart')
+    } catch (err) {
+        console.error("Error clearing your cart:", err);
         return res.status(500).send("Internal server error");
     }
 }
@@ -64,5 +75,6 @@ module.exports = {
     addNewProcuctToCart,
     getAllCartProducts,
     updateCart,
-    deleteCartItem
+    deleteCartItem,
+    clearAllCartItems
 }

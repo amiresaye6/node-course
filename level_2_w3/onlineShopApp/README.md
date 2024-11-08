@@ -1,11 +1,15 @@
 # 📁 Project Title
 
-> **Project Description**: Online Shop App: KMR Script [19:30]
+> **Project Description**: Online Shop App: KMR Script [19:42]
 
 ---
 ## to-do
 
 solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again. [done]
+- add alert message to the cart
+- add the new amount to the existeing products in the cart
+- add delete all button in the cart
+- make the orders page with its routes
 
 ## Technologies Used
 

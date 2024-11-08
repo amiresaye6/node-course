@@ -89,11 +89,28 @@ const deleteCartProduct = productId => {
     })
 }
 
+const deleteAllCartProducts = userId => {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(DB_URL)
+            .then(() => CartItem.deleteMany({ userId }))
+            .then((result) => {
+                mongoose.disconnect();
+                resolve(result);
+            })
+            .catch(err => {
+
+                mongoose.disconnect();
+                reject(err);
+            })
+    })
+}
+
 
 
 module.exports = {
     addNewProductToCart,
     getAllCartProducts,
     updateCartProduct,
-    deleteCartProduct
+    deleteCartProduct,
+    deleteAllCartProducts
 }
