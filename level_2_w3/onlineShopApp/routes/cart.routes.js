@@ -9,7 +9,7 @@ router.get('/', authGuard.isAuth, cartController.getAllCartProducts);
 router.post('/',
     authGuard.isAuth,
     check("amount").isInt({min: 1}).withMessage("Amount must be a NUMBER greater than 0"),
-    cartController.addNewProcuctToCart);
+    cartController.addNewProductToCart);
 
 router.post('/update', authGuard.isAuth,
     check("amount").isInt({min: 1}).withMessage("Amount must be a NUMBER greater than 0"),

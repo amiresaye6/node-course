@@ -21,8 +21,22 @@ const addNewProductToCart = data => {
     return new Promise((resolve, reject) => {
         mongoose.connect(DB_URL)
             .then(() => {
-                let item = new CartItem(data);
-                return item.save();
+                // check if product in user cart or not
+                return CartItem.findOne({ userId: data.userId, productId: data.productId }, { amount: 1 });
+            })
+            .then((itemInCart) => {
+                if (itemInCart) {
+                    console.log("found item in cart, updating cart item");
+                    
+                    return CartItem.updateOne(
+                        { productId: data.productId, userId: data.userId },
+                        { $set: { amount: +data.amount + +itemInCart.amount } }
+                    );
+                } else {
+                    console.log("item not found in cart, adding cart item");
+                    let item = new CartItem(data);
+                    return item.save();
+                }
             })
             .then(() => {
                 mongoose.disconnect();
@@ -59,7 +73,7 @@ const updateCartProduct = productUpdates => {
             .then(() => {
                 return CartItem.updateOne(
                     { productId: productUpdates.productId },
-                    { $set: { amount: productUpdates.amount } } 
+                    { $set: { amount: productUpdates.amount } }
                 );
             })
             .then((result) => {
@@ -105,6 +119,24 @@ const deleteAllCartProducts = userId => {
     })
 }
 
+const productInCart = (productId, userId) => {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(DB_URL)
+            .then(() => {
+                return CartItem.findOne({ userId, productId }, { amount: 1 });
+            })
+            .then(product => {
+                resolve(product);
+            })
+            .catch(err => {
+                reject(err);
+            })
+            .finally(() => {
+                mongoose.disconnect();
+            });
+    });
+};
+
 
 
 module.exports = {
@@ -112,5 +144,6 @@ module.exports = {
     getAllCartProducts,
     updateCartProduct,
     deleteCartProduct,
-    deleteAllCartProducts
+    deleteAllCartProducts,
+    productInCart
 }

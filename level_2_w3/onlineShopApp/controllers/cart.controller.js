@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const cartModule = require("../models/cart.model")
 
-const addNewProcuctToCart = async (req, res) => {
+const addNewProductToCart = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.flash('validationErrors', errors.array());
@@ -10,13 +10,13 @@ const addNewProcuctToCart = async (req, res) => {
     try {
         const product = req.body;
         await cartModule.addNewProductToCart({ ...product, userId: req.session.userId });
-        console.log({ ...product, userId: req.session.userId });
+        console.log("Added New Product:", { ...product, userId: req.session.userId });
         return res.redirect('/cart');
     } catch (err) {
         console.error("Error adding product to cart:", err);
         return res.status(500).send("Internal server error");
     }
-}
+};
 
 
 const getAllCartProducts = async (req, res) => {
@@ -72,7 +72,7 @@ const clearAllCartItems = async (req, res) => {
 }
 
 module.exports = {
-    addNewProcuctToCart,
+    addNewProductToCart,
     getAllCartProducts,
     updateCart,
     deleteCartItem,

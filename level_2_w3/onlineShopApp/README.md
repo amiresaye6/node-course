@@ -5,10 +5,10 @@
 ---
 ## to-do
 
-solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again. [done]
-- add alert message to the cart
+- solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again. [done]
+- add alert message to the cart [dome]
 - add the new amount to the existeing products in the cart
-- add delete all button in the cart
+- add clear all button in the cart [done]
 - make the orders page with its routes
 
 ## Technologies Used
