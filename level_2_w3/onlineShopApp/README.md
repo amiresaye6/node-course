@@ -7,9 +7,14 @@
 
 - solve the logout issue, {Login failed: Database not connected} error message return when logging out and trying to login again. [done]
 - add alert message to the cart [dome]
-- add the new amount to the existeing products in the cart
+- add the new amount to the existeing products in the cart [done]
 - add clear all button in the cart [done]
 - make the orders page with its routes
+    - make anothre orders model schema
+    - add creatOrder, deleteOrder, getMyOrders(user), getAllOrders(admin), updateOrderStatus(admin) methods to the model
+    - fix orders history page, show it after placeing an order
+    - add admin dashboard to deal with all orders
+
 
 ## Technologies Used
 

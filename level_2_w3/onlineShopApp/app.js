@@ -8,6 +8,7 @@ const homeRouter = require('./routes/home.routes');
 const productsRoutes = require('./routes/products.routes');
 const authRoutes = require("./routes/auth.routes");
 const cartRoutes = require("./routes/cart.routes");
+const ordersRoutes = require("./routes/orders.routes");
 const flash = require("connect-flash");
 const mongoose = require("mongoose")
 
@@ -54,6 +55,7 @@ app.use('/', homeRouter);
 app.use('/products', productsRoutes);
 app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
+app.use('/orders', ordersRoutes)
 
 // Custom error handling middleware
 app.use((err, req, res, next) => {
