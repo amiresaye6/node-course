@@ -9,7 +9,7 @@
 - add alert message to the cart [dome]
 - add the new amount to the existeing products in the cart [done]
 - add clear all button in the cart [done]
-- make the orders page with its routes
+- make the orders page with its routes >> in video 38 >> https://www.youtube.com/watch?v=U4zyYFp4VWA&list=PLL2zWZTDFZzgxxD66mv95I8hC0pby5bdp&index=38&ab_channel=KMRScript
     - make anothre orders model schema
     - add creatOrder, deleteOrder, getMyOrders(user), getAllOrders(admin), updateOrderStatus(admin) methods to the model
     - fix orders history page, show it after placeing an order

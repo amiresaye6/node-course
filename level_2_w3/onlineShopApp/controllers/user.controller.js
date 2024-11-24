@@ -31,6 +31,8 @@ const login = async (req, res) => {
         
         // If user is valid, set session and redirect
         req.session.userId = user._id;
+        req.session.isAdmin = user.isAdmin;
+        
         // console.log("third+++++++++++++++++", req.session.userId)
         res.redirect('/');
     } catch (error) {

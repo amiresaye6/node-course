@@ -3,6 +3,12 @@ const isAuth =(req, res, next) => {
     else res.redirect('/auth/login')
 }
 
+const isAdmin =(req, res, next) => {
+    if(req.session.isAdmin) next()
+    else res.redirect('/')
+}
+
 module.exports = {
-    isAuth
+    isAuth,
+    isAdmin
 }

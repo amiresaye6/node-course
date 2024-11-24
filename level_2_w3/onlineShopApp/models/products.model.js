@@ -58,3 +58,16 @@ exports.getOneProduct = (id) => {
             .catch(err => reject(err))
     })
 }
+exports.addOneProduct = (newProduct) => {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(DB_URL)
+            .then(() => {
+                return Product.create(newProduct)
+            })
+            .then(product => {
+                mongoose.disconnect()
+                resolve(product)
+            })
+            .catch(err => reject(err))
+    })
+}
