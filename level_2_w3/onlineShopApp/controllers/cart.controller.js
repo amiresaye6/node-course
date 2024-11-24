@@ -24,6 +24,7 @@ const getAllCartProducts = async (req, res) => {
     res.render('cart', {
         cartItems,
         isUser: true,
+        isAdmin: req.session.isAdmin,
         validationErrors: req.flash('validationErrors')
     })
 }

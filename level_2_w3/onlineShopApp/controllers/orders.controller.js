@@ -3,7 +3,11 @@ const cartModule = require("../models/cart.model")
 
 // loads orders page
 exports.getOrdersPage = (req, res) => {
-    res.render('orders', { cartItems: req.body, isUser: req.session.userId });
+    res.render('orders', {
+        cartItems: req.body,
+        isUser: req.session.userId,
+        isAdmin: req.session.isAdmin,
+    });
 }
 // exports.getOrdersPage = (req, res) => {
 //     const orders = [
@@ -36,6 +40,10 @@ exports.getOrdersPage = (req, res) => {
 // gets the orders object
 exports.getAllOrders = async (req, res) => {
     const cartItems = await cartModule.getAllCartProducts(req.session.userId)
-    res.render('orders', { cartItems, isUser: req.session.userId });
+    res.render('orders', {
+        cartItems,
+        isAdmin: req.session.isAdmin,
+        isUser: req.session.userId
+    });
     // res.json({items: cartItems})
 }

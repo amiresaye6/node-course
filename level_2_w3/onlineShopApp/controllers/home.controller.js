@@ -14,6 +14,7 @@ const getHome = (req, res) => {
     productsPromise.then(products => res.render("index", {
         products,
         isUser: req.session.userId,
+        isAdmin: req.session.isAdmin,
         validationErrors: req.flash('validationErrors')
     }))
     .catch(err => res.json(err));

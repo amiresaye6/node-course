@@ -4,13 +4,23 @@ const { validationResult } = require('express-validator');
 const loginPage = (req, res) => {
     const authErr = req.flash('authErr')[0];
     const validationErrors = req.flash('validationErrors');
-    res.render("login", { authErr, validationErrors, isUser: req.session.userId });
+    res.render("login", {
+        authErr,
+        validationErrors,
+        isAdmin: req.session.isAdmin,
+        isUser: req.session.userId
+    });
 };
 
 const signupPage = (req, res) => {
     const authErr = req.flash('authErr')[0];
     const validationErrors = req.flash('validationErrors');
-    res.render("signup", { authErr, validationErrors, isUser: req.session.userId });
+    res.render("signup", {
+        authErr,
+        validationErrors,
+        isAdmin: req.session.isAdmin,
+        isUser: req.session.userId
+    });
 };
 
 const login = async (req, res) => {
@@ -24,15 +34,15 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         // console.log("first+++++++++++++++++", email, password)
-        
+
         // Await the login method to ensure it completes before moving on
         const user = await userModule.login(email, password);
         // console.log("second+++++++++++++++++", user)
-        
+
         // If user is valid, set session and redirect
         req.session.userId = user._id;
         req.session.isAdmin = user.isAdmin;
-        
+
         // console.log("third+++++++++++++++++", req.session.userId)
         res.redirect('/');
     } catch (error) {
@@ -53,7 +63,7 @@ const signup = async (req, res) => {
 
     try {
         const { username, email, password } = req.body;
-        
+
         // Await the signup method to ensure it completes before moving on
         await userModule.signup(username, email, password);
         res.status(200).redirect('/auth/login');

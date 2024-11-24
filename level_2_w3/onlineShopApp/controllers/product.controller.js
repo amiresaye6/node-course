@@ -6,6 +6,7 @@ const getOneProduct = (req, res) => {
         .then(product => res.render('product', {
             product,
             isUser: req.session.userId,
+            isAdmin: req.session.isAdmin,
             validationErrors: req.flash("validationErrors")
         }))
 }
