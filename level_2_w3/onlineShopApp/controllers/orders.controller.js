@@ -69,10 +69,11 @@ exports.createOrder = async (req, res) => {
         const savedOrder = await newOrder.save();
 
         // Return success response
-        return res.status(201).json({
-            message: "Order placed successfully!",
-            order: savedOrder,
-        });
+        return res.redirect('/orders/my_orders')
+        // return res.status(201).json({
+        //     message: "Order placed successfully!",
+        //     order: savedOrder,
+        // });
     } catch (err) {
         console.error("Error creating order:", err);
         return res.status(500).json({ error: "Internal server error. Please try again later." });

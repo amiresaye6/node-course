@@ -50,7 +50,7 @@
                     <p class="card-text"><strong>Total Price: $<%= cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2) %></strong></p>
 
                     <!-- Proceed to Checkout Button -->
-                    <form method="get" action="/orders">
+                    <form method="get" action="/orders/cofirm">
                         <button type="submit" class="btn btn-primary w-100 mt-3">Proceed to Checkout</button>
                     </form>
 
