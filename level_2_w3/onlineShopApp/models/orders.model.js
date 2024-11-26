@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
 const cartItemSchema = mongoose.Schema({
     name: String,
@@ -11,35 +12,20 @@ const cartItemSchema = mongoose.Schema({
     timestamps: true
 });
 
-// const cartItemSchema = new mongoose.Schema({
-//     productId: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         required: true,
-//         ref: 'Product'
-//     },
-//     name: {
-//         type: String,
-//         required: true
-//     },
-//     price: {
-//         type: Number,
-//         required: true
-//     },
-//     amount: {
-//         type: Number,
-//         required: true
-//     },
-//     img: {
-//         type: String,
-//         required: true
-//     },
-// });
-
 const orderSchema = new mongoose.Schema(
     {
         fullName: {
             type: String,
             required: true
+        },
+        customarId: {
+            type: ObjectId,
+            ref: 'User'
+        },
+        status: {
+            type: String,
+            enum: ['pending', 'processed', 'shipped', 'delivered', 'cancelled'],
+            default: "pending",
         },
         address: {
             type: String,

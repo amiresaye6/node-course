@@ -31,6 +31,8 @@ const disconnectFromDatabase = async () => {
 // Create an Order
 exports.createOrder = async (req, res) => {
     const { fullName, address, phoneNumber, city, zipCode, paymentMethod, cartItems } = req.body;
+    console.log(req.session.userId);
+    
 
     // Validate the input data
     if (!fullName || !address || !phoneNumber || !city || !zipCode || !paymentMethod || !cartItems || cartItems.length === 0) {
@@ -55,6 +57,7 @@ exports.createOrder = async (req, res) => {
         // Create a new order with cart items from req.body
         const newOrder = new Order({
             fullName,
+            customarId: req.session.userId,
             address,
             phoneNumber,
             city,
@@ -98,6 +101,27 @@ exports.getAllOrders = async (req, res) => {
     } catch (err) {
         await disconnectFromDatabase();
         console.error("Error fetching orders:", err);
+        return res.status(500).json({ error: "Internal server error. Please try again later." });
+    }
+};
+
+// Get All Orders
+exports.getMyOrders = async (req, res) => {
+    try {
+        await connectToDatabase();
+
+        const orders = await Order.find({ customarId: req.session.userId }).sort({ createdAt: -1 });
+        await disconnectFromDatabase();
+
+        return res.render("userOrdersStatusPage", {
+            orders,
+            isUser: req.session.userId,
+            isAdmin: req.session.isAdmin,
+        })
+        return res.status(200).json(orders);
+    } catch (err) {
+        await disconnectFromDatabase();
+        console.error("Error fetching your orders:", err);
         return res.status(500).json({ error: "Internal server error. Please try again later." });
     }
 };

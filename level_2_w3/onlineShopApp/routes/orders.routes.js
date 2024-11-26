@@ -7,6 +7,7 @@ const orderController = require("../controllers/orders.controller");
 // router.post("/confirm", ordersController.confirmOrder)
 router.post('/', orderController.createOrder);
 router.get('/', orderController.getOrdersPage);
+router.get('/my_orders', orderController.getMyOrders);
 router.get('/all', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);
 router.post('/delete/:id', orderController.deleteOrder);
