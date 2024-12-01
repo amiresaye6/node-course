@@ -175,7 +175,7 @@
                                     ${orderDetails.parsedCartItems.map(item => `
                                         <tr>
                                             <td>${item.name}</td>
-                                            <td><img src="/uploads/${item.img}" alt="${item.name}" style="max-width: 50px; max-height: 50px;"></td>
+                                            <td><img src="/${item.img}" alt="${item.name}" style="max-width: 50px; max-height: 50px;"></td>
                                             <td>$${item.price.toFixed(2)}</td>
                                             <td>${item.amount}</td>
                                             <td>$${(item.price * item.amount).toFixed(2)}</td>

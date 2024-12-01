@@ -8,8 +8,10 @@ const getAddPage = (req, res) => {
     })
 }
 const addNewProduct = async (req, res) => {
-    await producsModule.addOneProduct({...req.body, img: req.file.filename})
-    res.json(req.body)
+    const product = await producsModule.addOneProduct({...req.body, img: req.file.filename})
+    console.log("obaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", product._id.toString());
+    
+    res.redirect(`/products/${product._id.toString()}`)
 }
 
 module.exports = {

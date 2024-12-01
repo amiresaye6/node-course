@@ -108,12 +108,12 @@ const deleteAllCartProducts = userId => {
         mongoose.connect(DB_URL)
             .then(() => CartItem.deleteMany({ userId }))
             .then((result) => {
-                mongoose.disconnect();
+                // mongoose.disconnect();
                 resolve(result);
             })
             .catch(err => {
 
-                mongoose.disconnect();
+                // mongoose.disconnect();
                 reject(err);
             })
     })

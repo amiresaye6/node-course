@@ -31,30 +31,42 @@ const disconnectFromDatabase = async () => {
 // Create an Order
 exports.createOrder = async (req, res) => {
     const { fullName, address, phoneNumber, city, zipCode, paymentMethod, cartItems } = req.body;
-    console.log(req.session.userId);
-    
 
-    // Validate the input data
-    if (!fullName || !address || !phoneNumber || !city || !zipCode || !paymentMethod || !cartItems || cartItems.length === 0) {
+    // Validate input data
+    if (!fullName || !address || !phoneNumber || !city || !zipCode || !paymentMethod || !cartItems) {
         return res.status(400).json({ error: "All fields are required, and the cart must not be empty." });
     }
 
     try {
-        console.log("Received cartItems:", req.body.cartItems);
+        // Parse cartItems
         let parsedCartItems;
-        if (cartItems && Array.isArray(cartItems)) {
-            try {
-                parsedCartItems = cartItems.map(item => JSON.parse(item)); // Parse each item if it's a string
-            } catch (error) {
-                return res.status(400).json({ error: "Error parsing cartItems." });
-            }
-        } else {
-            return res.status(400).json({ error: "Cart items are required." });
+        try {
+            parsedCartItems = JSON.parse(cartItems);
+        } catch (parseError) {
+            console.error("Error parsing cartItems:", parseError);
+            return res.status(400).json({ error: "Invalid cart items format." });
         }
+
+        // Validate parsedCartItems
+        if (!Array.isArray(parsedCartItems) || parsedCartItems.length === 0) {
+            return res.status(400).json({ error: "Cart items must be an array and cannot be empty." });
+        }
+
+        // Ensure each item has the required fields
+        const isValid = parsedCartItems.every(item =>
+            item.name && item.amount && item.price && typeof item.amount === 'number' && typeof item.price === 'number'
+        );
+
+        if (!isValid) {
+            return res.status(400).json({ error: "Each cart item must have a valid name, amount, and price." });
+        }
+
+        console.log("Validated Cart Items:", parsedCartItems);
+
         // Connect to the database
         await connectToDatabase();
 
-        // Create a new order with cart items from req.body
+        // Create a new order
         const newOrder = new Order({
             fullName,
             customarId: req.session.userId,
@@ -63,17 +75,14 @@ exports.createOrder = async (req, res) => {
             city,
             zipCode,
             paymentMethod,
-            parsedCartItems, // Use cartItems directly from req.body
+            parsedCartItems, // Save the validated cart items
         });
 
-        const savedOrder = await newOrder.save();
+        await newOrder.save();
+        await cartModule.deleteAllCartProducts(req.session.userId)
 
         // Return success response
-        return res.redirect('/orders/my_orders')
-        // return res.status(201).json({
-        //     message: "Order placed successfully!",
-        //     order: savedOrder,
-        // });
+        return res.redirect('/orders/my_orders');
     } catch (err) {
         console.error("Error creating order:", err);
         return res.status(500).json({ error: "Internal server error. Please try again later." });
@@ -82,8 +91,6 @@ exports.createOrder = async (req, res) => {
         await disconnectFromDatabase();
     }
 };
-
-
 
 // Get All Orders
 exports.getAllOrders = async (req, res) => {
@@ -98,7 +105,7 @@ exports.getAllOrders = async (req, res) => {
             isUser: req.session.userId,
             isAdmin: req.session.isAdmin,
         })
-        return res.status(200).json(orders);
+        // return res.status(200).json(orders);
     } catch (err) {
         await disconnectFromDatabase();
         console.error("Error fetching orders:", err);
@@ -152,6 +159,8 @@ exports.getOrderById = async (req, res) => {
 // Delete Order
 exports.deleteOrder = async (req, res) => {
     const { id } = req.params;
+    console.log("botato");
+    
 
     try {
         await connectToDatabase();
@@ -163,13 +172,32 @@ exports.deleteOrder = async (req, res) => {
             return res.status(404).json({ error: "Order not found." });
         }
 
-        return res.status(200).json({ message: "Order deleted successfully." });
+        return res.status(200).json({ message: "Order deleted successfully.", ok: true });
     } catch (err) {
         await disconnectFromDatabase();
         console.error("Error deleting order:", err);
         return res.status(500).json({ error: "Internal server error. Please try again later." });
     }
 };
+
+// Edit state of one order
+exports.editOrderState = async (req, res) => {
+    try {
+        await connectToDatabase();
+
+        await Order.updateOne(
+            { _id: req.body.orderId },
+            { $set: { status: req.body.status } }
+        );
+        await disconnectFromDatabase();
+
+        return res.redirect("/orders/all")
+    } catch (err) {
+        await disconnectFromDatabase();
+        console.error("Error fetching your orders:", err);
+        return res.status(500).json({ error: "Internal server error. Please try again later." });
+    }
+}
 
 // Render Orders Page
 exports.getOrdersPage = async (req, res) => {
