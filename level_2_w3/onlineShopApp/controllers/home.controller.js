@@ -20,7 +20,12 @@ const getHome = (req, res) => {
     .catch(err => res.json(err));
 }
 
+const getLndingPage = (req, res) => {
+    res.render('landingPage')
+}
+
 
 module.exports = {
-    getHome
+    getHome,
+    getLndingPage
 }

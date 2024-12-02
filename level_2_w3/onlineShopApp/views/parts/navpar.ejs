@@ -1,38 +1,42 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
+        <!-- Logo with padding-left of 10% -->
+        <a class="navbar-brand d-flex align-items-center ps-5" href="/landingPage">
+            <span class="fw-bold">StickerSphere</span>
+        </a>
+
         <!-- Toggle button for smaller screens -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Collapsible Navbar -->
-        <div class="collapse navbar-collapse" id="navbarScroll">
-            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <!-- Collapsible Navbar with padding-right of 10% -->
+        <div class="collapse navbar-collapse pe-5" id="navbarScroll">
+            <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active px-3" aria-current="page" href="/">Home</a>
                 </li>
                 <% if(isUser) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart">Cart</a>
+                        <a class="nav-link px-3" href="/cart">Cart</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/orders/my_orders">Orders</a>
+                        <a class="nav-link px-3" href="/orders/my_orders">Orders</a>
                     </li>
                 <% } else { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="/auth/login">Login</a>
+                        <a class="nav-link px-3" href="/auth/login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/auth/signup">Signup</a>
+                        <a class="nav-link px-3" href="/auth/signup">Signup</a>
                     </li>
                 <% } %>
-
-             <% if(isAdmin) { %>
+                <% if(isAdmin) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/add">Add Products</a>
+                        <a class="nav-link px-3" href="/admin/add">Add Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/orders/all">Manage Orders</a>
+                        <a class="nav-link px-3" href="/orders/all">Manage Orders</a>
                     </li>
                 <% } %>
             </ul>
