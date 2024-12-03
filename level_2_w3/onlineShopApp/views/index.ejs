@@ -1,70 +1,74 @@
-<%- include('parts/header') %>
-<%- include('parts/navpar.ejs') %>
+<%- include('parts/header') %> 
+<%- include('parts/navpar.ejs') %>  
 
-<div class="container my-5">
-    <div class="row">
-        <!-- Filter Form -->
-        <form action="/" method="get" class="row g-3 align-items-center mb-4">
-            <div class="col-md-4">
-                <label for="categorySelect" class="form-label">Filter by Category</label>
-                <select id="categorySelect" class="form-select" name="category">
+<div class="container my-5">     
+    <div class="row">         
+        <!-- Filter Form -->         
+        <form action="/" method="get" class="row g-3 align-items-center mb-4">             
+            <div class="col-md-4">                 
+                <label for="categorySelect" class="form-label">Filter by Category</label>                 
+                <select id="categorySelect" class="form-select" name="category">                     
                     <option value="all">All</option>
-                    <option value="men">Men</option>
-                    <option value="women">Women</option>
-                    <option value="both">Both</option>
-                </select>
-            </div>
-            <div class="col-md-auto">
-                <input type="submit" value="Filter" class="btn btn-primary mt-md-4"> <!-- Align button in form row -->
-            </div>
-        </form>
+                    <% 
+                    // Use uniqueCategories passed from controller
+                    uniqueCategories.forEach(category => { 
+                    %>
+                        <option value="<%= category %>"><%= category.charAt(0).toUpperCase() + category.slice(1) %></option>
+                    <% }); %>
+                </select>             
+            </div>             
+            <div class="col-md-auto">                 
+                <input type="submit" value="Filter" class="btn btn-primary mt-md-4"> 
+            </div>         
+        </form>          
 
-        <% if(validationErrors.length > 0){ %>
-            <div class="alert alert-danger">
-                <%= validationErrors[0].msg %>
-            </div>
-        <% } %>
+        <!-- Rest of the template remains the same -->
+        <% if(validationErrors.length > 0){ %>             
+            <div class="alert alert-danger">                 
+                <%= validationErrors[0].msg %>             
+            </div>         
+        <% } %>          
 
-        <!-- Products Grid -->
-        <% if (products.length > 0) { %>
-            <% products.forEach(product => { %>
-                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <img src="<%= product.img %>" class="card-img-top" alt="<%= product.name %>">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-3">
-                                <a href="/products/<%= product._id %>" class="text-decoration-none text-dark">
-                                    <%= product.name %>
-                                </a>
-                            </h5>
-                            <p class="card-text font-weight-bold text-success">Price: $<%= product.price %></p>
-                            <form action="/cart" method="post" class="mt-auto">
-                                <label for="quantity-<%= product._id %>" class="form-label">Quantity</label>
-                                <input 
-                                    type="number" 
-                                    name="amount" 
-                                    id="quantity-<%= product._id %>" 
-                                    class="form-control mb-2" 
-                                    placeholder="Enter quantity" 
-                                    min="1"
-                                    title="Specify the quantity to add to cart">
-                                <input type="hidden" name="productId" value="<%= product._id %>">
-                                <input type="hidden" name="name" value="<%= product.name %>">
-                                <input type="hidden" name="price" value="<%= product.price %>">
-                                <input type="hidden" name="img" value="<%= product.img %>">
-                                <input type="hidden" name="redirectTo" value="/">
-                                <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            <% }) %>
-        <% } else { %>
-            <div class="col-12 text-center">
-                <p class="text-muted">No products available.</p>
-            </div>
-        <% } %>
-    </div>
-</div>
+        <!-- Products Grid -->         
+        <% if (products.length > 0) { %>             
+            <% products.forEach(product => { %>                 
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">                     
+                    <div class="card shadow-sm h-100">                         
+                        <img src="<%= product.img %>" class="card-img-top" alt="<%= product.name %>">                         
+                        <div class="card-body d-flex flex-column">                             
+                            <h5 class="card-title mb-3">                                 
+                                <a href="/products/<%= product._id %>" class="text-decoration-none text-dark">                                     
+                                    <%= product.name %>                                 
+                                </a>                             
+                            </h5>                             
+                            <p class="card-text font-weight-bold text-success">Price: $<%= product.price %></p>                             
+                            <form action="/cart" method="post" class="mt-auto">                                 
+                                <label for="quantity-<%= product._id %>" class="form-label">Quantity</label>                                 
+                                <input                                      
+                                    type="number"                                      
+                                    name="amount"                                      
+                                    id="quantity-<%= product._id %>"                                      
+                                    class="form-control mb-2"                                      
+                                    placeholder="Enter quantity"                                      
+                                    min="1"                                     
+                                    title="Specify the quantity to add to cart">                                 
+                                <input type="hidden" name="productId" value="<%= product._id %>">                                 
+                                <input type="hidden" name="name" value="<%= product.name %>">                                 
+                                <input type="hidden" name="price" value="<%= product.price %>">                                 
+                                <input type="hidden" name="img" value="<%= product.img %>">                                 
+                                <input type="hidden" name="redirectTo" value="/">                                 
+                                <button type="submit" class="btn btn-primary w-100">Add to Cart</button>                             
+                            </form>                         
+                        </div>                     
+                    </div>                 
+                </div>             
+            <% }) %>         
+        <% } else { %>             
+            <div class="col-12 text-center">                 
+                <p class="text-muted">No products available.</p>             
+            </div>         
+        <% } %>     
+    </div> 
+</div>  
 
 <%- include('parts/footer') %>
