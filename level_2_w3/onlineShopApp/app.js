@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth.routes");
 const cartRoutes = require("./routes/cart.routes");
 const ordersRoutes = require("./routes/orders.routes");
 const adminRoutes = require("./routes/admin.routes");
+const emailRoutes = require("./routes/mailer.test.routes");
 const flash = require("connect-flash");
 const mongoose = require("mongoose")
 
@@ -58,6 +59,7 @@ app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', ordersRoutes);
 app.use('/admin', adminRoutes);
+app.use('/email', emailRoutes);
 
 
 // Custom error handling middleware
