@@ -41,6 +41,7 @@ const login = async (req, res) => {
         // If user is valid, set session and redirect
         req.session.userId = user._id;
         req.session.isAdmin = user.isAdmin;
+        req.session.userEmail = email;
 
         // Redirect to the home page after successful login
         res.redirect('/');
@@ -96,7 +97,7 @@ const signup = async (req, res) => {
         const emailText = `
             Dear ${username},
 
-            Welcome to ICMS! We're excited to have you on board.
+            Welcome to StickerStore! We're excited to have you on board.
 
             Your account has been successfully created with the following details:
             - Username: ${username}

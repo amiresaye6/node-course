@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Order = require("../models/orders.model");
 const cartModule = require("../models/cart.model");
+const mailer = require("../middlewares/automaticMailer");
 
 const DB_URL = process.env.DB_URL;
 
@@ -79,10 +80,40 @@ exports.createOrder = async (req, res) => {
         });
 
         await newOrder.save();
-        await cartModule.deleteAllCartProducts(req.session.userId)
+        await cartModule.deleteAllCartProducts(req.session.userId);
 
         // Return success response
-        return res.redirect('/orders/my_orders');
+        res.redirect('/orders/my_orders');
+
+        // Send order confirmation email (non-blocking)
+        const userEmail = req.session.userEmail;
+        if (userEmail) {
+            const emailSubject = "Order Confirmation - StickerStore";
+            const emailText = `
+                Dear ${fullName},
+
+                Thank you for your order! We're excited to let you know that your order has been successfully placed.
+
+                Order Details:
+                - Order ID: ${newOrder._id}
+                - Delivery Address: ${address}, ${city}, ${zipCode}
+                - Payment Method: ${paymentMethod}
+                - Total Items: ${parsedCartItems.length}
+
+                Items Ordered:
+                ${parsedCartItems.map(item => `- ${item.name} (Quantity: ${item.amount}, Price: $${item.price})`).join('\n')}
+
+                If you have any questions or need assistance, feel free to reach out to our support team.
+
+                Best regards,
+                The StickerStore Team
+            `;
+
+            mailer.sendEmail(userEmail, emailSubject, emailText)
+                .then(() => console.log("Order confirmation email sent successfully"))
+                .catch((error) => console.error("Failed to send order confirmation email:", error));
+        }
+
     } catch (err) {
         console.error("Error creating order:", err);
         return res.status(500).json({ error: "Internal server error. Please try again later." });
